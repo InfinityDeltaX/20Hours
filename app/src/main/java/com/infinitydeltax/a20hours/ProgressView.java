@@ -5,19 +5,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 public class ProgressView extends View {
 
-    private static final int totalTime = 1000*60;//*60*20;
+    private static final int totalTime = 1000*60*60;
     long timeSoFar;
 
     public int width;
     public int height;
     private Paint p;
-    int boxesX = 12;
-    int boxesY = 16;
+    int boxesX = 20;
+    int boxesY = 30;
     int boxDimX = 100;
     int boxDimY = 100;
     int boxSpaceX = 30;
@@ -40,7 +39,6 @@ public class ProgressView extends View {
 
     private void init(){
         p = new Paint();
-        p.setColor(Color.GREEN);
         invalidate();
     }
 
@@ -73,18 +71,44 @@ public class ProgressView extends View {
         int yoffset = (int) (boxSpaceY/2.0);
 
         timeSoFar = ((ProgressActivity) getContext()).getTimeSoFar();
-        Log.v(InProgressSkills.TAG, timeSoFar + "");
+        //Log.v(InProgressSkills.TAG, timeSoFar + "");
         int totalBoxesToDraw = (int) (timeSoFar/(float) totalTime*boxesX*boxesY);
         float remainder = (timeSoFar/(float) totalTime*boxesX*boxesY) - totalBoxesToDraw;
         int boxesSoFar = 0;
 
+        int completeColor = Color.rgb(0, 255, 0);
+        int incompleteColor = Color.rgb(225, 225, 225);
+
         outerloop: for (int y = 0; y < boxesY; y++) {
             for(int x = 0; x < boxesX; x++) {
-                if(totalBoxesToDraw <= (boxesSoFar++)) break outerloop;
+
+                if(boxesSoFar < totalBoxesToDraw) {
+                    p.setColor(completeColor);
+                    p.setAlpha(255);
+                    //Log.v(InProgressSkills.TAG, boxesSoFar + ": green");
+                } else {
+                    p.setAlpha(255);
+                    p.setColor(incompleteColor);
+                    //Log.v(InProgressSkills.TAG, boxesSoFar + ": grey");
+                }
+
                 canvas.drawRect(xoffset + x*perBoxX, yoffset + y*perBoxY, xoffset + x*perBoxX + boxDimX, yoffset + y*perBoxY + boxDimY, p);
+
+                if (boxesSoFar == totalBoxesToDraw){ //can draw on top of grey.
+                    p.setColor(completeColor);
+                    p.setAlpha((int) (remainder*255));
+                    canvas.drawRect(xoffset + x*perBoxX, yoffset + y*perBoxY, xoffset + x*perBoxX + boxDimX, yoffset + y*perBoxY + boxDimY, p);
+                    //Log.v(InProgressSkills.TAG, boxesSoFar + ": transparent");
+                }
+
+                boxesSoFar++;
+
                 //Log.v(InProgressSkills.TAG, "drawing");
             }
         }
+
+
+
 
         invalidate();
 
