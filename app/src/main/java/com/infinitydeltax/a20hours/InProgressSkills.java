@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,7 +35,7 @@ public class InProgressSkills extends AppCompatActivity {
 
         listview = (ListView) findViewById(R.id.skillListView);
 
-        tasks.add(new Task("First Task", 120, "A very important task"));
+        //tasks.add(new Task("First Task", 120, "A very important task"));
         adapter = new AdapterTask(this, android.R.layout.simple_list_item_1, tasks);
         listview.setAdapter(adapter);
 
@@ -53,8 +52,11 @@ public class InProgressSkills extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Snackbar.make(view, ((Task) parent.getItemAtPosition(position)).getDescription(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, ((Task) parent.getItemAtPosition(position)).getDescription(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+                Intent i = new Intent(InProgressSkills.this, ProgressActivity.class);
+                i.putExtra(ProgressActivity.ACTIVE_TASK, (Task) parent.getItemAtPosition(position));
+                startActivity(i);
             }
         });
     }

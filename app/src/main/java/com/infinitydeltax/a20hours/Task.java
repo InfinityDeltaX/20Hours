@@ -1,11 +1,13 @@
 package com.infinitydeltax.a20hours;
 
+import java.io.Serializable;
+
 /**
  * Created by Robert on 4/16/2016.
  */
-public class Task {
+public class Task implements Serializable{
     private String name;
-    private int timeRemaining;
+    private long timeRemaining;
     private String description;
 
     public Task(String name, int timeRemaining, String description) {
@@ -22,11 +24,11 @@ public class Task {
         this.name = name;
     }
 
-    public int getTimeRemaining() {
+    public long getTimeRemaining() {
         return timeRemaining;
     }
 
-    public void setTimeRemaining(int timeRemaining) {
+    public void setTimeRemaining(long timeRemaining) {
         this.timeRemaining = timeRemaining;
     }
 

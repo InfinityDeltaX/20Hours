@@ -44,19 +44,19 @@ public class TaskListView extends View {
                 attrs, R.styleable.TaskListView, defStyle, 0);
 
         mExampleString = a.getString(
-                R.styleable.TaskListView_exampleString);
+                R.styleable.TaskListView_exampleString2);
         mExampleColor = a.getColor(
-                R.styleable.TaskListView_exampleColor,
+                R.styleable.TaskListView_exampleColor2,
                 mExampleColor);
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
         // values that should fall on pixel boundaries.
         mExampleDimension = a.getDimension(
-                R.styleable.TaskListView_exampleDimension,
+                R.styleable.TaskListView_exampleDimension2,
                 mExampleDimension);
 
-        if (a.hasValue(R.styleable.TaskListView_exampleDrawable)) {
+        if (a.hasValue(R.styleable.TaskListView_exampleDrawable2)) {
             mExampleDrawable = a.getDrawable(
-                    R.styleable.TaskListView_exampleDrawable);
+                    R.styleable.TaskListView_exampleDrawable2);
             mExampleDrawable.setCallback(this);
         }
 

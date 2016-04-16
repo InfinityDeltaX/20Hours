@@ -52,7 +52,7 @@ public class AdapterTask extends ArrayAdapter<Task> {
             }
 
             holder.display_name.setText(tasks.get(position).getName());
-            holder.display_name.setText(tasks.get(position).getTimeRemaining());
+            holder.display_remaining.setText(tasks.get(position).getTimeRemaining() + "");
         } catch (Exception e){
 
         }
