@@ -7,19 +7,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class InProgressSkills extends AppCompatActivity {
 
-    ArrayList<String> itemData = new ArrayList<>();
+    //ArrayList<String> itemData = new ArrayList<>();
+    public static final String TAG = "20hours";
     ListView listview;
+    ArrayList<Task> tasks = new ArrayList<Task>();
+    AdapterTask adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +35,9 @@ public class InProgressSkills extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listview = (ListView) findViewById(R.id.skillListView);
-        String[] items = {"One", "dos", "san", "quattor"};
-        for(String a : items){
-            itemData.add(a);
-        }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemData);
+        tasks.add(new Task("First Task", 120, "A very important task"));
+        adapter = new AdapterTask(this, android.R.layout.simple_list_item_1, tasks);
         listview.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -50,15 +53,60 @@ public class InProgressSkills extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Snackbar.make(view, "Someone clicked me!" + parent.getId(), Snackbar.LENGTH_LONG)
+                Snackbar.make(view, ((Task) parent.getItemAtPosition(position)).getDescription(), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(openFileOutput("tasks", MODE_PRIVATE));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for(Task a : tasks){
+            String temp = a.getName() + "!!" + a.getTimeRemaining() + "!!" + a.getDescription();
+            Log.v(TAG, temp);
+            pw.println(temp);
+        }
+
+        pw.close();
+        tasks.clear();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Scanner in = null;
+        try {
+            in = new Scanner(openFileInput("tasks"));
+            while(in.hasNextLine()){
+                String current = in.nextLine();
+                String[] split = current.split("!!");
+                if(split.length < 3){
+                    Log.e(TAG, current);
+                    continue;
+                }
+                tasks.add(new Task(split[0], Integer.parseInt(split[1]), split[2]));
+            }
+            adapter.notifyDataSetChanged();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode==1 && resultCode== Activity.RESULT_OK){
-            itemData.add(data.getStringExtra(NewTask.TASK_NAME));
+            tasks.add(new Task(data.getStringExtra(NewTask.TASK_NAME), 100, data.getStringExtra(NewTask.TASK_DESC)));
+            adapter.notifyDataSetChanged();
             listview.invalidateViews();
 
         }
@@ -80,6 +128,13 @@ public class InProgressSkills extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if(id == R.id.action_delete_all) {
+            tasks.clear();
+            adapter.notifyDataSetChanged();
+            listview.invalidateViews();
             return true;
         }
 
