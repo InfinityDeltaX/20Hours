@@ -22,6 +22,14 @@ public class ProgressView extends View {
     int boxSpaceX = 30;
     int boxSpaceY = 30;
 
+    int perBoxY;
+    int perBoxX;
+    int yoffset;
+    int xoffset;
+    /*
+    int completeColor;
+    int incompleteColor;
+*/
     public ProgressView(Context context)
     {
         super(context);
@@ -42,34 +50,77 @@ public class ProgressView extends View {
         invalidate();
     }
 
-    private void CalculateBoxInfo(int totalBoxes){ //fill out drawing params.
 
+    private void CalculateBoxInfo(){ //fill out drawing params.
+        boxDimX = (int) (width/boxesX * 0.9);
+        boxDimY = (int) (height/boxesY * 0.9);
+        boxSpaceX = (int) (width/boxesX * 0.1);
+        boxSpaceY = (int) (height/boxesY * 0.1);
+
+        perBoxX = (boxDimX + boxSpaceX);
+        perBoxY = (boxDimY + boxSpaceY);
+
+        xoffset = (int) (boxSpaceX/2.0);
+        yoffset = (int) (boxSpaceY/2.0);
+/*
+        completeColor = Color.argb(255, 0, 255, 0);
+        incompleteColor = Color.argb(255, 225, 225, 225);
+        */
     }
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldwidth, int oldheight) {
         this.width = w;
         this.height = h;
         super.onSizeChanged(w, h, oldwidth, oldheight);
+        CalculateBoxInfo();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        /*
+        Log.v(InProgressSkills.TAG, "drawing");
+        super.onDraw(canvas);
+        
+        timeSoFar = ((ProgressActivity) getContext()).getTimeSoFar();
+        //Log.v(InProgressSkills.TAG, timeSoFar + "");
+        int totalBoxesToDraw = (int) (timeSoFar/(float) totalTime*boxesX*boxesY);
+        float remainder = (timeSoFar/(float) totalTime*boxesX*boxesY) - totalBoxesToDraw;
+        int boxesSoFar = 0;
+        p.setColor(completeColor);
 
+        outerloop: for (int y = 0; y < boxesY; y++) {
+            for(int x = 0; x < boxesX; x++) {
+                canvas.drawRect(xOffset + x*perBoxX, yOffset + y*perBoxY, xOffset + x*perBoxX + boxDimX, yOffset + y*perBoxY + boxDimY, p);
+                if (boxesSoFar == totalBoxesToDraw){ //can draw on top of grey.
+                    p.setColor(incompleteColor);
+                    canvas.drawRect(xOffset + x*perBoxX, yOffset + y*perBoxY, xOffset + x*perBoxX + boxDimX, yOffset + y*perBoxY + boxDimY, p);
+                    p.setColor(completeColor);
+                    p.setAlpha((int) (remainder*255));
+                    canvas.drawRect(xOffset + x*perBoxX, yOffset + y*perBoxY, xOffset + x*perBoxX + boxDimX, yOffset + y*perBoxY + boxDimY, p);
+                    p.setColor(incompleteColor);
+                }
+                boxesSoFar++;
+            }
+        }
+        invalidate();
+        */
+        /*
         boxDimX = (int) (width/boxesX * 0.9);
         boxDimY = (int) (height/boxesY * 0.9);
         boxSpaceX = (int) (width/boxesX * 0.1);
         boxSpaceY = (int) (height/boxesY * 0.1);
-
+*/
 
         super.onDraw(canvas);
-
+/*
         int perBoxX = (boxDimX + boxSpaceX);
         int perBoxY = (boxDimY + boxSpaceY);
 
         int xoffset = (int) (boxSpaceX/2.0);
         int yoffset = (int) (boxSpaceY/2.0);
-
+*/
         timeSoFar = ((ProgressActivity) getContext()).getTimeSoFar();
         //Log.v(InProgressSkills.TAG, timeSoFar + "");
         int totalBoxesToDraw = (int) (timeSoFar/(float) totalTime*boxesX*boxesY);
@@ -106,11 +157,6 @@ public class ProgressView extends View {
                 //Log.v(InProgressSkills.TAG, "drawing");
             }
         }
-
-
-
-
-        invalidate();
-
+    invalidate();
     }
 }

@@ -57,6 +57,8 @@ public class InProgressSkills extends AppCompatActivity {
                 Intent i = new Intent(InProgressSkills.this, ProgressActivity.class);
                 i.putExtra(ProgressActivity.ACTIVE_TASK, (Task) parent.getItemAtPosition(position));
                 startActivity(i);
+                //overridePendingTransition(android.R.anim.slide_out_right,android.R.anim.slide_in_left);
+                overridePendingTransition(R.anim.enter,R.anim.exit);
             }
         });
     }
